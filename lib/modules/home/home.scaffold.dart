@@ -93,10 +93,6 @@ class _HomeScaffoldState extends State<HomeScaffold> {
                       ),
                     ),
                   ),
-                  // Text(
-                  //   'Search',
-                  //   style: GoogleFonts.poppins(fontSize: 16),
-                  // ),
                 ],
               ),
             ),
