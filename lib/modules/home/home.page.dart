@@ -1,97 +1,81 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import './widgets/movie_list_card.dart';
+import 'dart:math';
 
-class HomePage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix_clone/data/movieRepository.dart';
+
+import '../../models/movie.model.dart';
+import '../common/loader.widget.dart';
+import 'widgets/movie_cards_row.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: _appBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Continue watching for User',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-              Row(
-                children: [
-                  MovieListCard(
-                    isResumeable: true,
-                  ),
-                  MovieListCard(
-                    isResumeable: true,
-                  ),
-                ],
-              ),
-              Text(
-                'Recommended for You',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-              MovieListCard(),
-              Text(
-                'Trending',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late List<Movie> continueWatchingMovies;
+  late List<Movie> recommendedMovies;
+  late List<Movie> movies;
+  bool isLoading = true;
+  late MovieRepository movieRepository;
+
+  @override
+  void initState() {
+    movieRepository = RepositoryProvider.of<MovieRepository>(context);
+    _init();
+    super.initState();
   }
 
-  AppBar _appBar() {
-    return AppBar(
-      centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(Icons.abc_outlined), //TODO: NETFLIX con
-          SizedBox(width: 18),
-          GestureDetector(
-            onTap: () => print('hel'),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              width: 260,
-              height: 36,
-              child: Row(
+  _init() async {
+    movies = await movieRepository.fetchAllMovies();
+    // print(movies);
+    recommendedMovies = _pickRandomMovies();
+    continueWatchingMovies = _pickRandomMovies();
+    setState(() => isLoading = false);
+  }
+
+  List<Movie> _pickRandomMovies() {
+    Set<Movie> _uniqueMovies = Set();
+    final _random = new Random();
+    for (int i = 0; i < 5; i++) {
+      final _randomIndex = _random.nextInt(movies.length);
+      _uniqueMovies.add(movies[_randomIndex]);
+    }
+    return _uniqueMovies.toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? Loader()
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.search),
-                  SizedBox(width: 15),
-                  Text(
-                    'Search',
-                    style: GoogleFonts.poppins(fontSize: 16),
+                  SizedBox(height: 20),
+                  MovieCardsRow(
+                    title: 'Continue watching',
+                    movieList: continueWatchingMovies,
+                    isResumeable: true,
+                  ),
+                  SizedBox(height: 30),
+                  MovieCardsRow(
+                    title: 'Recommended for You',
+                    movieList: recommendedMovies,
+                  ),
+                  SizedBox(height: 30),
+                  MovieCardsRow(
+                    title: 'Trending',
+                    movieList: movies,
                   ),
                 ],
               ),
             ),
-          ),
-          SizedBox(width: 18),
-          Icon(Icons.abc_outlined), //TODO: user icon
-        ],
-      ),
-    );
+          );
   }
 }
