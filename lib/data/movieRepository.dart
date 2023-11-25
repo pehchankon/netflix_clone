@@ -25,4 +25,9 @@ class MovieRepository {
     }
     return movies;
   }
+
+  Future<Movie> fetchMovieDetails(int id) async {
+    final data = await apiClient.fetchData('shows/$id');
+    return Movie.fromJson(data);
+  }
 }

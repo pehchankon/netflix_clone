@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/movie.model.dart';
+import '../../movie_details/movie_details.page.dart';
 
 class MovieCard extends StatelessWidget {
   const MovieCard({
@@ -16,7 +17,12 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => print('movie tap'),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MovieDetailsPage(movie: movie),
+        ),
+      ),
       child: Container(
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.1),
@@ -34,8 +40,8 @@ class MovieCard extends StatelessWidget {
             children: [
               movie.image?.medium == null
                   ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
                         movie.name,
                         style: GoogleFonts.poppins(
                           fontSize: 30,
@@ -43,7 +49,7 @@ class MovieCard extends StatelessWidget {
                           height: 1.2,
                         ),
                       ),
-                  )
+                    )
                   : SizedBox(),
               isResumeable ? _playButton() : SizedBox(),
             ],
