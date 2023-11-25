@@ -1,16 +1,9 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:netflix_clone/constants.dart';
-import 'package:netflix_clone/data/movieRepository.dart';
-import 'package:netflix_clone/modules/common/loader.widget.dart';
-import '../../models/movie.model.dart';
-import 'widgets/movie_card.dart';
 import 'home.page.dart';
 import 'search.page.dart';
-import 'widgets/movie_cards_row.dart';
 
 class HomeScaffold extends StatefulWidget {
   const HomeScaffold({super.key});

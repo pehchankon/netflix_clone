@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,6 @@ import 'package:netflix_clone/data/movieRepository.dart';
 import '../../models/movie.model.dart';
 import '../common/loader.widget.dart';
 import 'widgets/movie_cards_grid.dart';
-import 'widgets/movie_cards_row.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
